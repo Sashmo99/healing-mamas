@@ -1,0 +1,4 @@
+# Original Claude Design export (full-size uploads aren't used by the site)
+*.zip
+.DS_Store
+.claude/

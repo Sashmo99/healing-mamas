@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=Mulish:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#f7f4ee;color:#3d3a34;font-family:'Mulish',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#5d6b55;text-decoration:none}a:hover{color:#3d3a34}
+input,textarea,button{font:inherit}
+input::placeholder,textarea::placeholder{color:#a39d92}
+</style>
+</helmet>
+
+<header style="position:{{ headerPos }};top:0;left:0;right:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 32px;padding:28px clamp(20px,5vw,64px);color:{{ headerInk }};pointer-events:none">
+  <a href="#" onClick="{{ goHome }}" style="display:flex;flex-direction:column;gap:4px;color:inherit;pointer-events:auto">
+    <span style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;letter-spacing:0.38em;line-height:1">healing mamas</span>
+    <span style="font-size:11px;letter-spacing:0.28em;text-transform:lowercase;opacity:0.85">healingmamas.life</span>
+  </a>
+  <nav style="display:flex;gap:28px;font-size:13px;letter-spacing:0.18em;pointer-events:auto">
+    <a href="#" onClick="{{ goHome }}" style="color:inherit;padding:6px 0;border-bottom:1px solid {{ homeLine }}">home</a>
+    <a href="#" onClick="{{ goAbout }}" style="color:inherit;padding:6px 0;border-bottom:1px solid {{ aboutLine }}">about</a>
+    <a href="#" onClick="{{ goOfferings }}" style="color:inherit;padding:6px 0;border-bottom:1px solid {{ offeringsLine }}">offerings</a>
+    <a href="#" onClick="{{ goContact }}" style="color:inherit;padding:6px 0;border-bottom:1px solid transparent">contact</a>
+  </nav>
+</header>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main>
+    <section data-screen-label="Home hero" style="position:relative;height:100vh;min-height:560px;overflow:hidden;background:#d9d4c8">
+      <sc-for list="{{ slides }}" as="s" hint-placeholder-count="5">
+        <div style="position:absolute;inset:0;opacity:{{ s.opacity }};z-index:{{ s.z }};pointer-events:{{ s.pe }};transition:{{ fadeTransition }}">
+          <div style="position:absolute;inset:0;transform:{{ s.transform }};transition:{{ driftTransition }}">
+            <sc-if value="{{ s.load }}" hint-placeholder-val="{{ true }}">
+              <img src="{{ s.src }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ s.pos }};display:block">
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <div style="position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(180deg,rgba(30,28,24,0.32) 0%,rgba(30,28,24,0) 28%,rgba(30,28,24,0) 55%,rgba(30,28,24,0.38) 100%)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:clamp(64px,14vh,140px);z-index:6;display:flex;flex-direction:column;align-items:center;gap:32px;padding:0 24px;text-align:center;color:#fbf9f5;pointer-events:none">
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(40px,6.4vw,84px);line-height:1.05;letter-spacing:0.01em;text-wrap:balance;text-shadow:0 1px 24px rgba(0,0,0,0.25)">Holistic healing for every mom</h1>
+        <a href="#" onClick="{{ goContact }}" style="pointer-events:auto;color:#fbf9f5;font-size:13px;letter-spacing:0.24em;padding:14px 34px;border:1px solid rgba(251,249,245,0.8);border-radius:999px" style-hover="background:rgba(251,249,245,0.16)">get in touch</a>
+      </div>
+      <sc-if value="{{ framing }}" hint-placeholder-val="{{ false }}">
+        <div onPointerDown="{{ frameDown }}" onPointerMove="{{ frameMove }}" onPointerUp="{{ frameUp }}" style="position:absolute;inset:0;z-index:8;cursor:crosshair;touch-action:none">
+          <div style="position:absolute;left:{{ curX }};top:{{ curY }};width:22px;height:22px;margin:-11px 0 0 -11px;border:2px solid #fbf9f5;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,0.3);pointer-events:none"></div>
+          <div style="position:absolute;top:110px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 20px;background:rgba(30,28,24,0.7);color:#fbf9f5;border-radius:12px;font-size:13px;letter-spacing:0.04em;text-align:center;max-width:90vw">
+            <span>Click or drag on the part of this photo you want kept in view.</span>
+            <span style="opacity:0.8">{{ curName }} · {{ curPos }}</span>
+            <div style="display:flex;gap:10px">
+              <button onClick="{{ prevSlide }}" onPointerDown="{{ stop }}" style="padding:8px 16px;border:1px solid rgba(251,249,245,0.7);background:transparent;color:#fbf9f5;border-radius:999px;cursor:pointer">← prev</button>
+              <button onClick="{{ resetSlide }}" onPointerDown="{{ stop }}" style="padding:8px 16px;border:1px solid rgba(251,249,245,0.7);background:transparent;color:#fbf9f5;border-radius:999px;cursor:pointer">reset</button>
+              <button onClick="{{ nextSlide }}" onPointerDown="{{ stop }}" style="padding:8px 16px;border:1px solid rgba(251,249,245,0.7);background:transparent;color:#fbf9f5;border-radius:999px;cursor:pointer">next →</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+      <div style="position:absolute;bottom:28px;left:0;right:0;z-index:9;display:flex;flex-wrap:wrap;justify-content:center;gap:0;padding:0 24px">
+        <sc-for list="{{ slides }}" as="s" hint-placeholder-count="5">
+          <button onClick="{{ s.go }}" aria-label="{{ s.label }}" style="width:28px;height:28px;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <span style="display:block;width:7px;height:7px;border-radius:50%;background:#fbf9f5;opacity:{{ s.dot }};transition:opacity 1.2s ease"></span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <section ref="{{ contactRef }}" data-screen-label="Contact" style="padding:clamp(80px,12vw,140px) 24px;display:flex;justify-content:center">
+      <div style="width:100%;max-width:560px;display:flex;flex-direction:column;gap:40px">
+        <div style="display:flex;flex-direction:column;gap:14px;text-align:center">
+          <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(34px,4vw,46px);line-height:1.1">let's talk</h2>
+          <p style="margin:0;font-size:15px;line-height:1.7;color:#6b655b;font-weight:300;text-wrap:pretty">Reach out with a question or to begin. I'll get back to you soon.</p>
+        </div>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ submit }}" style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px">
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:0.2em;color:#6b655b">name
+                <input required="" name="name" style="border:0;border-bottom:1px solid #cfc8bb;background:transparent;padding:10px 0;font-size:16px;color:#3d3a34;outline:none" style-focus="border-bottom-color:#5d6b55">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:0.2em;color:#6b655b">email
+                <input required="" type="email" name="email" style="border:0;border-bottom:1px solid #cfc8bb;background:transparent;padding:10px 0;font-size:16px;color:#3d3a34;outline:none" style-focus="border-bottom-color:#5d6b55">
+              </label>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:0.2em;color:#6b655b">phone (optional)
+              <input type="tel" name="phone" style="border:0;border-bottom:1px solid #cfc8bb;background:transparent;padding:10px 0;font-size:16px;color:#3d3a34;outline:none" style-focus="border-bottom-color:#5d6b55">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:8px;font-size:11px;letter-spacing:0.2em;color:#6b655b">message
+              <textarea name="message" rows="4" style="border:0;border-bottom:1px solid #cfc8bb;background:transparent;padding:10px 0;font-size:16px;line-height:1.6;color:#3d3a34;outline:none;resize:vertical" style-focus="border-bottom-color:#5d6b55"></textarea>
+            </label>
+            <button type="submit" style="align-self:center;margin-top:12px;font-family:'Mulish',sans-serif;font-size:13px;letter-spacing:0.24em;color:#f7f4ee;background:#5d6b55;border:0;border-radius:999px;padding:16px 44px;cursor:pointer" style-hover="background:#4c5946">{{ sendLabel }}</button>
+            <sc-if value="{{ sendError }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;text-align:center;font-size:14px;line-height:1.6;color:#8a5a4a">Something went wrong sending your message. Please try again, or email <a href="mailto:healingmamamina@gmail.com" style="color:#5d6b55;text-decoration:underline">healingmamamina@gmail.com</a>.</p>
+            </sc-if>
+          </form>
+        </sc-if>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:#5d6b55">Thank you. I'll be in touch soon.</p>
+        </sc-if>
+      </div>
+    </section>
+  </main>
+</sc-if>
+
+<sc-if value="{{ isOfferings }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Offerings" style="position:relative;overflow:hidden;min-height:100vh;box-sizing:border-box;padding:clamp(150px,20vh,200px) 24px 120px;display:flex;justify-content:center;background:#3d3a34">
+    <sc-for list="{{ slides }}" as="s" hint-placeholder-count="5">
+      <div style="position:absolute;inset:0;opacity:{{ s.opacity }};z-index:0;transition:{{ fadeTransition }}">
+        <div style="position:absolute;inset:0;transform:{{ s.transform }};transition:{{ driftTransition }}">
+          <sc-if value="{{ s.load }}" hint-placeholder-val="{{ true }}">
+            <img src="{{ s.src }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ s.pos }};display:block"></img>
+          </sc-if>
+        </div>
+      </div>
+    </sc-for>
+    <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(30,28,24,0.5)"></div>
+    <div style="position:relative;z-index:2;width:100%;max-width:880px;display:flex;flex-direction:column;gap:clamp(48px,7vw,80px);color:#fbf9f5;text-shadow:0 1px 16px rgba(0,0,0,0.35)">
+      <h1 style="margin:0;text-align:center;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,4.4vw,50px);line-height:1.1">offerings</h1>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(40px,5vw,64px)">
+        <section style="display:flex;flex-direction:column;gap:18px;padding-top:28px;border-top:1px solid rgba(251,249,245,0.55)">
+          <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:30px;line-height:1.15">individual work</h2>
+          <p style="margin:0;font-size:16px;line-height:1.8;font-weight:300;color:#f3efe7;text-wrap:pretty">One-on-one support for your healing, in person or virtual.</p>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:11px;letter-spacing:0.2em;color:#e4ead9">IN PERSON</span>
+              <span style="font-size:15px;line-height:1.7;font-weight:300;color:#f3efe7">Walnut Creek, CA and surrounding communities</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:11px;letter-spacing:0.2em;color:#e4ead9">VIRTUAL</span>
+              <span style="font-size:15px;line-height:1.7;font-weight:300;color:#f3efe7">For those further away</span>
+            </div>
+          </div>
+          <a href="#" onClick="{{ goContact }}" style="margin-top:8px;font-size:13px;letter-spacing:0.22em;color:#e4ead9">get in touch &rarr;</a>
+        </section>
+        <section style="display:flex;flex-direction:column;gap:18px;padding-top:28px;border-top:1px solid rgba(251,249,245,0.55)">
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px">
+            <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:30px;line-height:1.15">postpartum group</h2>
+            <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:#e4ead9">coming soon</span>
+          </div>
+          <p style="margin:0;font-size:16px;line-height:1.8;font-weight:300;color:#f3efe7;text-wrap:pretty">A gathering of mothers in the postpartum season. Reach out to hear when it opens.</p>
+          <a href="#" onClick="{{ goContact }}" style="margin-top:8px;font-size:13px;letter-spacing:0.22em;color:#e4ead9">let me know &rarr;</a>
+        </section>
+      </div>
+    </div>
+  </main>
+</sc-if>
+
+<sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="About" style="min-height:100vh;box-sizing:border-box;padding:clamp(150px,20vh,200px) 24px 120px;display:flex;justify-content:center">
+    <div style="width:100%;max-width:820px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(40px,6vw,72px);align-items:start">
+      <div style="display:flex;justify-content:center">
+        <img src="images/IMG_7214.jpg" alt="Me with my daughter" style="width:min(300px,70vw);height:min(300px,70vw);border-radius:50%;object-fit:cover;object-position:50% 72%;display:block">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,4.4vw,50px);line-height:1.1">about me</h1>
+        <p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;line-height:1.4;color:#5d6b55;text-wrap:pretty">Hi, I’m Mina. I’m so glad you’ve found me.</p>
+        <p style="margin:0;font-size:16px;line-height:1.8;font-weight:300;color:#56514a;text-wrap:pretty">I’m a social worker, postpartum doula, and mother of three. I’m also a wife, a daughter, a sister, a friend, and a woman embracing the power of her femininity. My whole life I have been called to help and heal others, particularly those going through vulnerable times.</p>
+        <p style="margin:0;font-size:16px;line-height:1.8;font-weight:300;color:#56514a;text-wrap:pretty">I am a natural nurturer, with an array of holistic approaches to share for personal and interpersonal healing and growth based on what is going on within you and in your life. I draw my approach from my education and experience as a social worker and postpartum doula, my own three very different postpartum experiences, my motherhood journey as it continues to unfold, my 20+ years of yoga and meditation practice, experience with somatic and sound healing, along with my deep connection to nature and spirit and the universe.</p>
+        <p style="margin:0;font-size:16px;line-height:1.8;font-weight:300;color:#56514a;text-wrap:pretty">If you are struggling or seeking support in pregnancy, postpartum or in any early stage of motherhood, please know you are not alone. I come from a place of deep compassion, non-judgement, and pure intention to support you and your family in a way that works for you.</p>
+        <a href="#" onClick="{{ goContact }}" style="margin-top:8px;font-size:13px;letter-spacing:0.22em;color:#5d6b55">get in touch →</a>
+      </div>
+    </div>
+  </main>
+</sc-if>
+
+<footer style="padding:40px 24px 48px;display:flex;flex-direction:column;align-items:center;gap:8px;border-top:1px solid #e6e0d5;font-size:12px;letter-spacing:0.18em;color:#8a8478">
+  <span style="font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:0.38em;color:#56514a">healing mamas</span>
+  <span>healingmamas.life</span>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;framing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Photo framing&quot;},&quot;slideSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:10,&quot;min&quot;:4,&quot;max&quot;:20,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Slideshow&quot;},&quot;fadeSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:3,&quot;min&quot;:1,&quot;max&quot;:6,&quot;step&quot;:0.5,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Slideshow&quot;},&quot;autoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Slideshow&quot;},&quot;drift&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Slideshow&quot;}}">
+class Component extends DCLogic {
+  defaultPos = { 'IMG_3562.JPG': '50% 40%', 'IMG_0967.JPG': '54% 83%', 'IMG_5636.JPG': '54% 54%', 'AECCD08F-5D7C-468F-AAE9-952044C0CF80.jpg': '54% 18%', 'pasted-1791264364380-0.png': '45% 32%', 'IMG_2454.jpeg': '46% 68%', 'IMG_3093.JPG': '51% 18%', 'pasted-1791266086366-0.jpeg': '49% 49%', 'IMG_7180.JPG': '51% 57%' };
+  state = { page: 'home', idx: 0, from: null, sent: false, pos: (() => { try { return JSON.parse(localStorage.getItem('hm-framing') || '{}'); } catch (e) { return {}; } })() };
+  posFor(src) { const f = src.split('/').pop(); return this.state.pos[f] || this.defaultPos[f] || '50% 50%'; }
+  setPos(e) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = Math.round(Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)));
+    const y = Math.round(Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100)));
+    const f = this.photos[this.state.idx].split('/').pop();
+    const pos = { ...this.state.pos, [f]: x + '% ' + y + '%' };
+    localStorage.setItem('hm-framing', JSON.stringify(pos));
+    this.setState({ pos });
+  }
+  // Change slide, remembering the outgoing one so it stays mounted while it fades out.
+  show(i) { this.setState(s => ({ from: s.idx, idx: (i(s.idx) + this.count) % this.count })); }
+  contactRef = React.createRef();
+  photos = ['IMG_3562.JPG','IMG_5636.JPG','AECCD08F-5D7C-468F-AAE9-952044C0CF80.jpg','pasted-1791264364380-0.png','F745EC26-BBFE-4DAE-974C-81B8D4E04291.jpg','IMG_0930.JPG','IMG_2454.jpeg','IMG_0932.JPG','IMG_1337.JPG','IMG_1670.jpeg','IMG_0967.JPG','IMG_3093.JPG','IMG_7180.JPG','pasted-1791266086366-0.jpeg','IMG_7212.JPG','IMG_7211.JPG','IMG_7210.JPG','IMG_7209.JPG','IMG_7208.JPG','IMG_7207.JPG','IMG_7206.JPG','IMG_7205.JPG','IMG_7204.JPG','IMG_1338.JPG','IMG_7920.JPG','IMG_5931.JPG','IMG_5910.JPG','IMG_5954.jpg'].map(f => 'uploads/' + f).sort(() => Math.random() - 0.5);
+  count = this.photos.length;
+
+  componentDidMount() { this.startTimer(); }
+  componentWillUnmount() { clearInterval(this.timer); }
+  componentDidUpdate(prev) {
+    if (prev.slideSeconds !== this.props.slideSeconds || prev.autoplay !== this.props.autoplay || prev.framing !== this.props.framing) this.startTimer();
+  }
+  startTimer() {
+    clearInterval(this.timer);
+    if (this.props.autoplay === false || this.props.framing) return;
+    const ms = (this.props.slideSeconds ?? 10) * 1000;
+    this.timer = setInterval(() => this.show(i => i + 1), ms);
+  }
+  nav(page, toContact) {
+    return e => {
+      e && e.preventDefault();
+      this.setState({ page }, () => {
+        if (toContact) setTimeout(() => {
+          const el = this.contactRef.current;
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+        }, 60);
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    };
+  }
+
+  renderVals() {
+    const { page, idx, from, sent } = this.state;
+    const fade = this.props.fadeSeconds ?? 3;
+    const slideS = this.props.slideSeconds ?? 10;
+    const drift = this.props.drift ?? true;
+    const isHome = page === 'home';
+    const slides = Array.from({ length: this.count }, (_, i) => {
+      const on = i === idx;
+      return {
+        load: on || i === from || i === (idx + 1) % this.count,
+        src: 'images/' + this.photos[i].split('/').pop().replace(/\.\w+$/, '.jpg'),
+        pos: this.posFor(this.photos[i]),
+        label: 'nature photo ' + (i + 1),
+        opacity: on ? 1 : 0,
+        z: on ? 2 : 1,
+        pe: on ? 'auto' : 'none',
+        dot: on ? 0.95 : 0.4,
+        transform: drift && on ? 'scale(1.06)' : 'scale(1)',
+        go: () => { this.show(() => i); this.startTimer(); }
+      };
+    });
+    return {
+      isHome, isAbout: page === 'about', sent, notSent: !sent, slides,
+      headerPos: isHome || page === 'offerings' ? 'absolute' : 'relative',
+      headerInk: isHome || page === 'offerings' ? '#fbf9f5' : '#3d3a34',
+      homeLine: isHome ? 'currentColor' : 'transparent',
+      aboutLine: page === 'about' ? 'currentColor' : 'transparent',
+      isOfferings: page === 'offerings',
+      offeringsLine: page === 'offerings' ? 'currentColor' : 'transparent',
+      goOfferings: this.nav('offerings'),
+      fadeTransition: `opacity ${fade}s ease-in-out`,
+      driftTransition: drift ? `transform ${slideS + fade}s linear` : 'none',
+      contactRef: this.contactRef,
+      framing: !!this.props.framing && isHome,
+      curName: this.photos[idx].split('/').pop(),
+      curPos: this.posFor(this.photos[idx]),
+      curX: this.posFor(this.photos[idx]).split(' ')[0],
+      curY: this.posFor(this.photos[idx]).split(' ')[1],
+      frameDown: e => { this.dragging = true; e.currentTarget.setPointerCapture(e.pointerId); this.setPos(e); },
+      frameMove: e => { if (this.dragging) this.setPos(e); },
+      frameUp: () => { this.dragging = false; },
+      stop: e => e.stopPropagation(),
+      prevSlide: () => this.show(i => i - 1),
+      nextSlide: () => this.show(i => i + 1),
+      resetSlide: () => { const f = this.photos[idx].split('/').pop(); const pos = { ...this.state.pos }; delete pos[f]; localStorage.setItem('hm-framing', JSON.stringify(pos)); this.setState({ pos }); },
+      goHome: this.nav('home'),
+      goAbout: this.nav('about'),
+      goContact: this.nav('home', true),
+      sending: this.state.sending,
+      sendLabel: this.state.sending ? 'sending…' : 'send',
+      sendError: this.state.sendError,
+      submit: async e => {
+        e.preventDefault();
+        if (this.state.sending) return;
+        const fd = new FormData(e.currentTarget);
+        const data = Object.fromEntries(fd.entries());
+        data._subject = 'New message from healingmamas.life — ' + (data.name || '');
+        data._template = 'table';
+        data._captcha = 'false';
+        data._replyto = data.email;
+        this.setState({ sending: true, sendError: false });
+        try {
+          const r = await fetch('https://formsubmit.co/ajax/healingmamamina@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok || j.success === 'false' || j.success === false) throw new Error(j.message || 'failed');
+          this.setState({ sent: true, sending: false });
+        } catch (err) {
+          this.setState({ sending: false, sendError: true });
+        }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
